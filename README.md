@@ -1,2 +1,3 @@
 # cursoPython78315
-repositorio para el cusrso de pythin de coderhuse
+repositorio para el cusrso de python de coderhuse
+PrimeraEntrega
