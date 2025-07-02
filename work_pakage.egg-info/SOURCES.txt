@@ -1,9 +1,0 @@
-setup.py
-work_package/__init__.py
-work_package/action_manager.py
-work_package/data_manager.py
-work_package/ddbb_models.py
-work_pakage.egg-info/PKG-INFO
-work_pakage.egg-info/SOURCES.txt
-work_pakage.egg-info/dependency_links.txt
-work_pakage.egg-info/top_level.txt
