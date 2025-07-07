@@ -1,24 +1,24 @@
 from django import forms
-from .models import Book
+from .models import Category, Author, Book
 
 #--------------------------------------------------
 # formularios de filtrado
 #--------------------------------------------------
 
 class BookFilterForm(forms.Form):
-    isbn = forms.CharField(label="ISBN", required=False, widget=forms.TextInput(attrs={
+    isbn = forms.CharField(label="ISBN:", required=False, widget=forms.TextInput(attrs={
         'class': 'form-control', 'placeholder': '999‑99‑99999‑99‑9'
     }))
-    library_code = forms.CharField(label="Código de biblioteca", required=False, widget=forms.TextInput(attrs={
+    library_code = forms.CharField(label="Código de biblioteca:", required=False, widget=forms.TextInput(attrs={
         'class': 'form-control', 'placeholder': '99‑999'
     }))
-    title_contains = forms.CharField(label="Título contiene", required=False, widget=forms.TextInput(attrs={
+    title_contains = forms.CharField(label="Título: (contiene)", required=False, widget=forms.TextInput(attrs={
         'class': 'form-control', 'placeholder': 'Buscar por título...'
     }))
 
 class CategoryFilterForm(forms.Form):
     name_contains = forms.CharField(
-        label="Nombre contiene",
+        label="Nombre: (contiene)",
         required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
@@ -26,7 +26,7 @@ class CategoryFilterForm(forms.Form):
         })
     )
     is_active = forms.ChoiceField(
-        label="Estado",
+        label="Estado:",
         required=False,
         choices=[('', 'Todos'), ('1', 'Activa'), ('0', 'Inactiva')],
         widget=forms.Select(attrs={'class': 'form-select'})
@@ -34,7 +34,7 @@ class CategoryFilterForm(forms.Form):
 
 class AuthorFilterForm(forms.Form):
     name_contains = forms.CharField(
-        label="Nombre contiene",
+        label="Nombre: (contiene)",
         required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
@@ -54,6 +54,18 @@ class BookForm(forms.ModelForm):
             'category', 'author', 'editor', 'publish_year', 'image'
         ]
 
+        labels = {
+            'library_code': 'Código de biblioteca',
+            'title': 'Título del libro',
+            'isbn': 'ISBN',
+            'short_description': 'Descripción breve',
+            'category': 'Categoría',
+            'author': 'Autor',
+            'editor': 'Editorial',
+            'publish_year': 'Año de publicación',
+            'image': 'Imagen (opcional)',
+        }
+
         widgets = {
             'library_code': forms.TextInput(attrs={
                 'placeholder': '99-999',
@@ -68,4 +80,28 @@ class BookForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Descripción breve del libro'
             }),
+        }
+
+class AuthorForm(forms.ModelForm):
+    class Meta:
+        model = Author
+        fields = ['name']
+        labels = {
+            'name': 'Nombre del autor',
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['category_name', 'active']
+        labels = {
+            'category_name': 'Nombre de la categoría',
+            'active': '¿Está activa?',
+        }
+        widgets = {
+            'category_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }

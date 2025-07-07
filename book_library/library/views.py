@@ -14,7 +14,7 @@ from typing import cast
 from .models import Book, Category, Author 
 
 # Import de forms
-from .forms import BookFilterForm, BookForm
+from .forms import AuthorForm, BookFilterForm, BookForm, CategoryForm
 from .forms import CategoryFilterForm
 from .forms import AuthorFilterForm
 
@@ -149,7 +149,7 @@ def category_list(request):
 
 class CategoryCreateView(CreateView):
     model = Category
-    fields = ['category_name']
+    form_class = CategoryForm
     template_name = 'library/common_cu_form.html'
     success_url = reverse_lazy('listado categorias')
 
@@ -174,7 +174,7 @@ class CategoryCreateView(CreateView):
 
 class CategoryUpdateView(UpdateView):
     model = Category
-    fields = ['category_name','active']
+    form_class = CategoryForm
     template_name = 'library/common_cu_form.html'
     success_url = reverse_lazy('listado categorias')
 
@@ -229,7 +229,7 @@ def author_list(request):
 
 class AuthorCreateView(CreateView):
     model = Author
-    fields = ['name']
+    form_class = AuthorForm
     template_name = 'library/common_cu_form.html'
     success_url = reverse_lazy('listado autores')
 
@@ -254,7 +254,7 @@ class AuthorCreateView(CreateView):
 
 class AuthorUpdateView(UpdateView):
     model = Author
-    fields = ['name']
+    form_class = AuthorForm
     template_name = 'library/common_cu_form.html'
     success_url = reverse_lazy('listado autores')
 
