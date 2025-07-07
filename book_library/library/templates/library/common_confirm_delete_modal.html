@@ -1,0 +1,47 @@
+<!-- Modal de confirmación generico-->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form id="confirmDeleteForm" method="post">
+        {% csrf_token %}
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="confirmDeleteModalLabel">
+            ❗¿Estás seguro de que querés eliminar <span id="modalObjectName" class="fw-bold"></span>?
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body text-center">
+          Esta acción no se puede deshacer.
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-lg"></i> Cancelar
+          </button>
+          <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash"></i> Eliminar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const confirmModal = document.getElementById('confirmDeleteModal');
+    if (confirmModal) {
+      confirmModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        if (!button) return;
+
+        const objectName = button.getAttribute('data-object-name') || 'este elemento';
+        const formAction = button.getAttribute('data-form-action');
+
+        const modalObjectName = confirmModal.querySelector('#modalObjectName');
+        const deleteForm = confirmModal.querySelector('#confirmDeleteForm');
+
+        if (modalObjectName) modalObjectName.textContent = objectName;
+        if (deleteForm && formAction) deleteForm.action = formAction;
+      });
+    }
+  });
+</script>

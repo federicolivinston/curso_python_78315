@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+  
+  <div class="container">
+    <!-- Titulo y boton nuevo -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1><i class="bi bi-person-lines-fill"></i> Autores</h1>
+      <a href="{% url 'nuevo autor' %}" class="btn custom-main-btn">
+        <i class="bi bi-plus-circle"></i> Nuevo Autor
+      </a>
+    </div>
+
+    <!-- Formulario de filtros -->
+    <form method="get" class="row g-3 mb-4">
+      <div class="col-md-10">
+        {{ form.name_contains.label_tag }}
+        {{ form.name_contains }}
+      </div>
+      <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn custom-main-btn w-100">Filtrar</button>
+      </div>
+    </form>
+
+    <!-- Mensajes de succes y error -->
+    {% if messages %}
+      <div class="mt-3">
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {% else %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {% endif %}
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Tabla con la lista de objetos y acciones -->
+    <div class="table-responsive table-container">
+      <table class="table table-striped table-hover">
+        <thead class="pastel-header" >
+          <tr>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for author in authors %}
+          <tr>
+            <td>{{ author.name }}</td>
+            <td>
+              <a href="#" 
+                class="btn btn-danger btn-sm" 
+                data-bs-toggle="modal" 
+                data-bs-target="#confirmDeleteModal"
+                data-object-name=" el Autor: {{ author.name }}" 
+                data-form-action="{% url 'eliminar autor' author.pk %}">
+                <i class="bi bi-trash"></i>
+              </a>
+
+              <a href="{% url 'editar autor' author.pk %}" 
+                class="btn btn-success btn-sm" 
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Editar autor">
+                <i class="bi bi-pencil"></i>
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="1" class="text-center">No se encontraron autores.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+<!-- Frmulario de confirmacion de borrado modal -->
+{% include "library/common_confirm_delete_modal.html" %}
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Estilos particulares para esta pagina para la imagen -->
+<style>
+  .image-container {
+    width: 300px;
+    height: 400px;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+</style>
+
+<div class="container mt-5" style="max-width: 800px;">
+  <!-- Tarjeta de detalle -->
+  <div class="card shadow-sm">
+    <div class="row g-0">
+      <div class="col-md-auto image-container">
+        {% if object.image %}
+            {% if object.image|slice:":4" == "http" %}
+                <img src="{{ object.image }}" alt="Portada del libro">
+            {% else %}
+                <img src="{% static 'img/book_images/' %}{{ object.image }}" alt="Portada del libro">
+            {% endif %}
+        {% else %}
+          <img src="{% static 'img/book_images/default.jpg' %}" alt="Imagen por defecto">
+        {% endif %}
+      </div>
+      <div class="col-md">
+        <div class="card-body">
+          <h5 class="card-title">({{ object.library_code }}) {{ object.title }}</h5>
+          {% if object.short_description %}
+            <p class="card-text">{{ object.short_description }}</p>
+          {% endif %}
+          <p class="card-text"><strong>Editorial:</strong> {{ object.editor }}</p>
+          <p class="card-text"><strong>Autor:</strong> {{ object.author }}</p>
+          <p class="card-text"><strong>Categoría:</strong> {{ object.category }}</p>
+          <p class="card-text"><strong>Año de publicación:</strong> {{ object.publish_year }}</p>
+          <p class="card-text"><strong>ISBN:</strong> {{ object.isbn }}</p>
+          <p class="card-text"><small class="text-muted">Estado: {{ object.get_status_display }}</small></p>
+          <p class="card-text"><small class="text-muted">Fecha de adquisición: {{ object.aquisition_date|date:"d/m/Y" }}</small></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Boton volver -->
+  <div class="text-center mt-4">
+    <a href="{% url 'listado libros' %}" class="btn btn-outline-secondary">
+      ← Volver
+    </a>
+  </div>
+</div>
+{% endblock %}

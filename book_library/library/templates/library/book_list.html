@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container">
+    <!-- Titulo y boton nuevo -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>📚 Lista de Libros</h1>
+      <a href="{% url 'nuevo libro' %}" class="btn custom-main-btn">
+        <i class="bi bi-plus-circle"></i> Nuevo Libro
+      </a>
+    </div>
+
+    <!-- Formulario de filtros -->
+    <form method="get" class="row g-3 mb-4">
+      <div class="col-md-3">{{ form.isbn.label_tag }}{{ form.isbn }}</div>
+      <div class="col-md-3">{{ form.library_code.label_tag }}{{ form.library_code }}</div>
+      <div class="col-md-4">{{ form.title_contains.label_tag }}{{ form.title_contains }}</div>
+      <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn custom-main-btn w-100">Filtrar</button>
+      </div>
+    </form>
+
+    <!-- Mensajes de succes y error -->
+    {% if messages %}
+      <div class="mt-3">
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {% else %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {% endif %}
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Tabla con la lista de objetos y acciones -->    
+    <div class="table-responsive table-container">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="pastel-header">
+          <tr>
+            <th>Código</th>
+            <th>ISBN</th>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Categoría</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for book in book_list %}
+          <tr>
+            <td>{{ book.library_code }}</td>
+            <td>{{ book.isbn }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author.name }}</td>
+            <td>{{ book.category.category_name }}</td>
+            <td>
+              {% if book.status == 'A' %}
+                <span class="badge bg-success">Disponible</span>
+              {% elif book.status == 'B' %}
+                <span class="badge bg-warning">Prestado</span>
+              {% else %}
+                <span class="badge bg-secondary">No disponible</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'detalle libro' book.pk %}" 
+                class="btn btn-success btn-sm" 
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Ver libro">
+                <i class="bi bi-eye"></i>
+              </a>
+              <a href="#" 
+                class="btn btn-danger btn-sm" 
+                data-bs-toggle="modal" 
+                data-bs-target="#confirmDeleteModal" 
+                data-object-name=" el Libro: {{ book.title }}" 
+                data-form-action="{% url 'eliminar libro' book.pk %}">
+                <i class="bi bi-trash"></i>
+              </a>              
+              <a href="{% url 'editar libro' book.pk %}" 
+                class="btn btn-success btn-sm" 
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Editar libro">
+                <i class="bi bi-pencil"></i>
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="text-center">No se encontraron libros.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+<!-- Frmulario de confirmacion de borrado modal -->  
+{% include "library/common_confirm_delete_modal.html" %}  
+{% endblock %}

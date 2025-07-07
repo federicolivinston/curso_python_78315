@@ -1,0 +1,89 @@
+/*Estilos particulares no bootstrap*/
+
+.navbar-brand {
+  font-size: 1.2rem;
+}
+
+.offcanvas-title {
+  font-size: 1rem;
+}
+
+.nav-link {
+  font-size: 0.95rem;
+  padding: 0.6rem 1rem;
+}
+
+.offcanvas-body {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.offcanvas-start {
+  width: 250px !important; 
+}
+
+.min-300 {
+  min-height: 400px;
+}
+
+.custom-navbar {
+  height: 75px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 0 1rem;
+}
+
+.bg-light-aqua {
+  background-color: #d7f0f2 !important;
+}
+
+.bg-light-menta {
+  background-color: #E6F9F0 !important;
+}
+
+.navbar-logo {
+  height: 70px;
+  width: auto;
+  object-fit: contain; 
+}
+
+.footer-font{
+  font-size:small;
+}
+
+.welcome-box {
+  max-width: 700px;
+  width: 100%;
+}
+
+.custom-menu-btn {
+  background-color: #E6F9F0; 
+  color: #2E4D3B;            
+  border: 1px solid #BFEAD9;
+}
+
+.custom-menu-btn:hover {
+  background-color: #D9F2E8;
+  color: #1f3d30;
+  border-color: #A6DAC6;
+}
+
+.custom-main-btn {
+  background-color: #D9F2E8; 
+  color: #2E4D3B;            
+  border: 1px solid #BFEAD9;
+}
+
+.custom-main-btn:hover {
+  background-color: #D6CDEA;
+  color: #1f3d30;
+  border-color: #A6DAC6;
+}
+
+.table thead.pastel-header th {
+  background-color: #E6F9F0 !important;  
+  color: #2E4D3B !important;            
+  border-bottom: 2px solid #b8d8ba !important;
+}
