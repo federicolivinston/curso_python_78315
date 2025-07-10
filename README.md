@@ -1,6 +1,6 @@
 # 📘 cursoPython78315
 
-Repositorio para el curso de Python de **Coderhouse** dictado por *Federico Livingston*.
+Repositorio para el curso de Python de **Coderhouse** de *Federico Livingston*.
 
 Entrega N°3: **Biblioteca Nacional de la Juventud**  
 Aplicación web desarrollada con Django que permite gestionar libros, autores y categorías con filtros, validaciones y una interfaz moderna basada en Bootstrap.
