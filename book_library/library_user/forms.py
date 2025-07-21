@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from .models import Avatar
 
+#--------------------------------------------------
+# formularios crear / modificar usuarios
+#--------------------------------------------------
+
 class RegisterForm(forms.ModelForm):
 
     password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
@@ -45,6 +49,9 @@ class UserUpdateForm(forms.ModelForm):
             'email': 'Direccion de mail',
         }
 
+#--------------------------------------------------
+# formulario para crear / modificar el avatar
+#--------------------------------------------------
 class AvatarForm(forms.ModelForm):
     class Meta:
         model = Avatar
@@ -61,3 +68,14 @@ class AvatarForm(forms.ModelForm):
         self.fields['imagen'].widget.clear_checkbox_label = ' Eliminar'
         self.fields['imagen'].widget.initial_text = 'Actual'
         self.fields['imagen'].widget.input_text = 'Seleccionar nueva imagen'
+
+#--------------------------------------------------
+# formulario modificar contraseña
+#--------------------------------------------------
+from django.contrib.auth.forms import PasswordChangeForm
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.help_text = ''  

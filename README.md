@@ -50,22 +50,25 @@ Aplicación web desarrollada con Django que permite gestionar libros, autores y 
   - Códigos duplicados no permitidos
 - Imagen opcional para cada libro
 
-### 🗂️ Modelo `User` (Modelo auth user de django)
+### 👤 Modelo `User` (Modelo auth user de django)
 - Registrar usuario
 - LogIn / LogOut a la aplicacion
 - Ver perfil completo del usuario
 - Editar Perfil
 - Cambiar Contraseña
 
-### 🗂️ Modelo `Avatar` (Avatar del usuario)
+### 🖼️ Modelo `Avatar` (Avatar del usuario)
 - Agregar, modificar o eliminar el avatar del usuario
 
 ---
 
-## 💾 Base de Datos de Prueba
+## 💾 Datos de Prueba
 
 Se incluye una base de datos con contenido precargado:  
 📄 `db.sqlite3.default`
+
+Se incluyen las imagenes de los dos libros de prueba en la carpeta:
+📂 `media/` — Archivos subidos por usuarios (imágenes de libros, avatares, etc.)
 
 ### 🔑 Datos de acceso
 Usuario comun: 
@@ -174,7 +177,7 @@ Requisitos previos:
 ```bash
 pip install -r requirements.txt
 
-3. **Incluir migraciones en caso de que usen base de datos vacía:**
+**Incluir migraciones en caso de que usen base de datos vacía:**
 
 ```bash
 python manage.py makemigrations

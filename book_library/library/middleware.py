@@ -5,6 +5,8 @@ import re
 # --------------------------------------------------------
 # Este codigo genera que todas las paginas que 
 # no esten exentas requieren que el usuario este logueado
+# maneja de forma centralizada los accesos como segunda
+# capa de seguridad
 # --------------------------------------------------------
 
 class LoginRequiredMiddleware:

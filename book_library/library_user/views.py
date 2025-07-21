@@ -17,7 +17,7 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from .models import Avatar  
-from .forms import AvatarForm, UserUpdateForm
+from .forms import AvatarForm, UserUpdateForm, CustomPasswordChangeForm
 
 #--------------------------------------------------
 # vistas de acceso al portal (login y registro)
@@ -53,6 +53,10 @@ def register_view(request):
         form = RegisterForm()
     return render(request, 'library_user/register.html', {'form': form})
 
+#--------------------------------------------------
+# Vista para mostrar el perfil con el avatar
+#--------------------------------------------------
+
 class ProfileView(LoginRequiredMixin, DetailView):
     model = User
     template_name = 'library_user/profile.html'
@@ -67,21 +71,13 @@ class ProfileView(LoginRequiredMixin, DetailView):
         context['avatar'] = avatar
         context['avatar_form'] = AvatarForm(instance=avatar)
         context['profile_form'] = UserUpdateForm(instance=self.request.user)
-        context['password_form'] = PasswordChangeForm(user=self.request.user)
+        context['password_form'] = CustomPasswordChangeForm(user=self.request.user)
         return context
 
-@login_required
-def avatar_update(request):
-    avatar, created = Avatar.objects.get_or_create(user=request.user)
-    if request.method == 'POST':
-        form = AvatarForm(request.POST, request.FILES, instance=avatar)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Avatar actualizado correctamente.')
-        else:
-            messages.error(request, 'Error al actualizar el avatar.')
-    return redirect('perfil usuario')
-
+#--------------------------------------------------
+# vistas para administrar el avatar, 
+# el perfil y la password
+#--------------------------------------------------
 
 @login_required
 def update_profile(request):
@@ -100,12 +96,24 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 
 @login_required
+def avatar_update(request):
+    avatar, created = Avatar.objects.get_or_create(user=request.user)
+    if request.method == 'POST':
+        form = AvatarForm(request.POST, request.FILES, instance=avatar)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Avatar actualizado correctamente.')
+        else:
+            messages.error(request, 'Error al actualizar el avatar.')
+    return redirect('perfil usuario')
+    
+@login_required
 def update_password(request):
     user = request.user
     abrir_modal = request.method == 'POST'
 
     if request.method == 'POST':
-        form = PasswordChangeForm(user=user, data=request.POST)
+        form = CustomPasswordChangeForm(user=user, data=request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)  
@@ -113,7 +121,7 @@ def update_password(request):
             return redirect('perfil usuario')
         
     else:
-        form = PasswordChangeForm(user=user)
+        form = CustomPasswordChangeForm(user=user)
 
     avatar = Avatar.objects.filter(user=user).first()
 
