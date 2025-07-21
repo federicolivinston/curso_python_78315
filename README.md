@@ -174,7 +174,7 @@ Requisitos previos:
 ```bash
 pip install -r requirements.txt
 
-3. **Incluir migraciones en caso de que usen base de datos vacía:**
+**Incluir migraciones en caso de que usen base de datos vacía:**
 
 ```bash
 python manage.py makemigrations
