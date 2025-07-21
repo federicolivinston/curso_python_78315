@@ -14,7 +14,7 @@ Aplicación web desarrollada con Django que permite gestionar libros, autores y 
 | Proyecto principal | `book_library/`                            |
 | Aplicación         | `book_library/library/`                    |
 | Templates App      | `book_library/library/templates/`          |
-| Aplicación         | `book_library/librery_user/`               |
+| Aplicación         | `book_library/library_user/`               |
 | Templates App      | `book_library/library_user/templates/`     |
 | Template base      | `book_library/templates/base.html`         |
 | Template 404       | `book_library/templates/404.html`          |
@@ -89,41 +89,41 @@ Contraseña: admin123
 ## Acceso Anonimo
 
 ### 🏠 Home
-- Ingreso a la web principal
-- Ver presentación del sitio
-- Acceso al menú (esquina superior izquierda)
-- Ver la seccion Conocenos
-- Acceder al listado de libros
-- Filtrar por alguno de los filtros
-- Ver el detalle de un libro
-- Acceder al login
-- Registrar un usuario
-- Intentar registrar un usurio diferente con el mismo nombre de usuario → debe dar error
+- ✅ Ingreso a la web principal
+- ✅ Ver presentación del sitio
+- ✅ Acceso al menú (esquina superior izquierda)
+- ✅ Ver la seccion Conocenos
+- ✅ Acceder al listado de libros
+- ✅ Filtrar por alguno de los filtros
+- ✅ Ver el detalle de un libro
+- ✅ Acceder al login
+- ✅ Registrar un usuario
+- ❌ Intentar registrar un usurio diferente con el mismo nombre de usuario → debe dar error
 
 ## Acceso con usuario registrado
-- Loguearse con el usuario registrado
-- Acceder al menu → verificar que tengo las opciones de logout y ver perfil en vez de login
-- Acceder al listado de libros
-- Filtrar por alguno de los filtros
-- ver el detalle de un libro → debe aparece la opcion Reservar
-- Reservar el libro → debe cambiar el estado a reservado y aparecer la opcion Devolver
-- Devolver el libro → debe cambiar el estado a Disonible y aparecer la opcion Reservar
-- Volver a reservar el libro y dejarlo reservado para pruebas futuras.
-- Acceder al perfil del usuario → deben aparecer los datos del usuario y un avatar default 
-- Acceder modificar el avatar y subir una imagen → debe modificarse la imagen en el perfil y en el encabezado a la derecha
-- Acceder a modificar perfil y marcar eliminar → debe volver al avatar default.
-- Acceder a modificar datos y modificarlos → verificar que el campo email verifica el formato
-- Acceder a cambiar contraseña y cambiarla → debe mantenerse logueado y volver al perfil
+- ✅ Loguearse con el usuario registrado
+- ✅ Acceder al menu → verificar que tengo las opciones de logout y ver perfil en vez de login
+- ✅ Acceder al listado de libros
+- ✅ Filtrar por alguno de los filtros
+- ✅ ver el detalle de un libro → debe aparece la opcion Reservar
+- ✅ Reservar el libro → debe cambiar el estado a reservado y aparecer la opcion Devolver
+- ✅ Devolver el libro → debe cambiar el estado a Disonible y aparecer la opcion Reservar
+- ✅ Volver a reservar el libro y dejarlo reservado para pruebas futuras.
+- ✅ Acceder al perfil del usuario → deben aparecer los datos del usuario y un avatar default 
+- ✅ Acceder modificar el avatar y subir una imagen → debe modificarse la imagen en el perfil y en el encabezado a la derecha
+- ✅ Acceder a modificar perfil y marcar eliminar → debe volver al avatar default.
+- ✅ Acceder a modificar datos y modificarlos → verificar que el campo email verifica el formato
+- ✅ Acceder a cambiar contraseña y cambiarla → debe mantenerse logueado y volver al perfil
 
 ## Acceso con usuario user
-- Loguearse con el usuario user o un usario distinto al usado antes
-- Acceder al listado de libros → verificar que el libro reservado antes tenga el estado correcto
-- Acceder al detalle del libro reservado → verificar que no aparecen las opciones reservar/devolver
+- ✅ Loguearse con el usuario user o un usario distinto al usado antes
+- ✅ Acceder al listado de libros → verificar que el libro reservado antes tenga el estado correcto
+- ✅ Acceder al detalle del libro reservado → verificar que no aparecen las opciones reservar/devolver
 
 ## Acceso con usuario admin
 Si no se utiliza la base adjunta se debe crear un grupo admin y asignarselo al superusuario
-- Acceder con el usuario admin
-- Verificar que aparecen las opciones de administracion de autores, categorias y libros
+- ✅ Acceder con el usuario admin
+- ✅ Verificar que aparecen las opciones de administracion de autores, categorias y libros
 
 Ejecutar las siguientes acciones por modelo:
 ---
@@ -173,3 +173,9 @@ Requisitos previos:
 
 ```bash
 pip install -r requirements.txt
+
+3. **Incluir migraciones en caso de que usen base de datos vacía:**
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
