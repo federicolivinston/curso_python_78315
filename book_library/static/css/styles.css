@@ -71,19 +71,61 @@
 }
 
 .custom-main-btn {
-  background-color: #D9F2E8; 
-  color: #2E4D3B;            
+  background-color: #D9F2E8;
+  color: #2E4D3B;
   border: 1px solid #BFEAD9;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .custom-main-btn:hover {
-  background-color: #D6CDEA;
+  background-color: #A3CBB8;
   color: #1f3d30;
-  border-color: #A6DAC6;
+  border-color: #8BB799;
 }
 
 .table thead.pastel-header th {
   background-color: #E6F9F0 !important;  
   color: #2E4D3B !important;            
   border-bottom: 2px solid #b8d8ba !important;
+}
+
+.pastel-btn-gray {
+  background-color: #e0e0e0;
+  color: #4a4a4a;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.pastel-btn-gray:hover {
+  background-color: #d5d5d5;
+  color: #2e2e2e;
+}
+
+.pastel-header-danger {
+  background-color: #ffe5e5; 
+}
+
+.custom-save_other-btn {
+  background-color: #9ED499; /* Verde más oscuro y pastel */
+  color: #1F3D20;
+  border: 1px solid #88BC7E;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.custom-save_other-btn:hover {
+  background-color: #75A86A; /* Hover más oscuro pero suave */
+  color: #13301A;
+  border-color: #618C54;
+}
+
+body {
+    background: #FAF3E0;
+}
+.login-container {
+    max-width: 400px;
+    margin: 80px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
 }

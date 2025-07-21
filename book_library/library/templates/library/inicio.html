@@ -1,5 +1,9 @@
 {% extends "base.html" %}
+{% load breadcrumbs %}
 
+{% block breadcrumb %}
+  {% render_breadcrumbs %}
+{% endblock %}
 {% block content %}
   <!-- Contenido principal -->
   
@@ -21,11 +25,6 @@
             salas de estudio, actividades culturales, 
             talleres y asistencia personalizada para ayudarte a 
             encontrar lo que necesitas.
-        </p>
-
-        <p class="mb-4">
-            Te invitamos a recorrer nuestras estanterías, 
-            descubrir nuevas lecturas y formar parte de nuestra comunidad lectora.
         </p>
     </div>
 {% endblock %}

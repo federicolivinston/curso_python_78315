@@ -1,13 +1,20 @@
 {% extends "base.html" %}
+{% load breadcrumbs %}
+
+{% block breadcrumb %}
+  {% render_breadcrumbs %}
+{% endblock %}
 
 {% block content %}
   <div class="container">
     <!-- Titulo y boton nuevo -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h1>📚 Lista de Libros</h1>
+      {% if is_admin %}
       <a href="{% url 'nuevo libro' %}" class="btn custom-main-btn">
         <i class="bi bi-plus-circle"></i> Nuevo Libro
       </a>
+      {% endif %}
     </div>
 
     <!-- Formulario de filtros -->
@@ -46,7 +53,10 @@
             <th>Título</th>
             <th>Autor</th>
             <th>Categoría</th>
+            <!-- Solo puede ver el estado si esta logueado-->
+            {% if user.is_authenticated %}
             <th>Estado</th>
+            {% endif %}
             <th>Acciones</th>
           </tr>
         </thead>
@@ -58,15 +68,19 @@
             <td>{{ book.title }}</td>
             <td>{{ book.author.name }}</td>
             <td>{{ book.category.category_name }}</td>
+            {% if user.is_authenticated %}
             <td>
-              {% if book.status == 'A' %}
-                <span class="badge bg-success">Disponible</span>
-              {% elif book.status == 'B' %}
-                <span class="badge bg-warning">Prestado</span>
+              {% if book.status.name == "Disponible" %}
+                <span class="badge bg-success">{{ book.status.name }}</span>
+              {% elif book.status.name == "Prestado" %}
+                <span class="badge bg-warning">{{ book.status.name }}</span>
+              {% elif book.status.name == "No disponible" %}
+                <span class="badge bg-secondary">{{ book.status.name }}</span>
               {% else %}
-                <span class="badge bg-secondary">No disponible</span>
+                <span class="badge bg-light text-dark">{{ book.status.name }}</span>
               {% endif %}
             </td>
+            {% endif %}
             <td>
               <a href="{% url 'detalle libro' book.pk %}" 
                 class="btn btn-success btn-sm" 
@@ -75,6 +89,7 @@
                 title="Ver libro">
                 <i class="bi bi-eye"></i>
               </a>
+              {% if is_admin %}
               <a href="#" 
                 class="btn btn-danger btn-sm" 
                 data-bs-toggle="modal" 
@@ -90,6 +105,7 @@
                 title="Editar libro">
                 <i class="bi bi-pencil"></i>
               </a>
+              {% endif %}
             </td>
           </tr>
           {% empty %}

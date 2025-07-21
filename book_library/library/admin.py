@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Category, Author
+from .models import Book, Category, Author, Parameter
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
@@ -17,4 +17,9 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
+    search_fields = ('name',)
+
+@admin.register(Parameter)
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'parameter_type')
     search_fields = ('name',)

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load breadcrumbs %}
+
+{% block breadcrumb %}
+  {% render_breadcrumbs %}
+{% endblock %}
+{% block content %}
+<section style="max-width: 730px; margin: 2rem auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; line-height: 1.6;">
+  <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem;">📚 La Biblioteca Más Loca del Barrio 📚</h2>
+  <p style="font-size: 1.2rem; text-align: center; margin-bottom: 2rem;">
+    Bienvenidos a la <strong>Biblioteca Nacional de la Juventud</strong>, el único lugar donde los libros no muerden (pero te pueden morder de curiosidad). Aquí creemos que leer es la mejor aventura sin tener que salir de tu asiento, y que cada página es una puerta mágica hacia mundos increíbles... ¡sin cobrar extra por el equipaje!
+  </p>
+
+  <ul style="list-style: none; padding: 0; font-size: 1.1rem; margin-bottom: 2rem;">
+    <li>📶 Los libros se prestan más rápido que el WiFi en hora pico.</li>
+    <li>🎬 Tenemos más historias que Netflix (y sin interrupciones molestas).</li>
+    <li>🌬️ Las estanterías a veces susurran secretos... o tal vez solo es el viento.</li>
+    <li>🤫 Nuestro silencio es tan sagrado que hasta las palomas lo respetan.</li>
+  </ul>
+
+  <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+    Pero no solo somos un lugar para amantes de la lectura, somos la pandilla de los curiosos, los exploradores de ideas y los cazadores de conocimiento. Aquí puedes encontrar desde manuales para cocinar pizza perfecta 🍕 hasta guías para sobrevivir a una invasión zombie 🧟‍♂️ (por si acaso).
+  </p>
+
+  <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+    Además, nuestro equipo de bibliotecarios es experto en encontrar ese libro que no sabías que necesitabas, ¡y te lo recomendamos con toda la emoción del mundo!
+  </p>
+
+  <p style="font-size: 1.2rem; font-weight: bold; text-align: center; margin-top: 2rem;">
+    ¡Ven, presta un libro y deja que la magia comience!
+  </p>
+</section>
+{% endblock %}

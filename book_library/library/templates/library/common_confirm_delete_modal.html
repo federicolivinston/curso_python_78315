@@ -1,27 +1,33 @@
-<!-- Modal de confirmación generico-->
+<!-- Modal de Confirmación Genérico (Eliminar) -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+    <div class="modal-content shadow-sm border-0 rounded-4">
+      
+      <div class="modal-header pastel-header-danger border-0">
+        <h5 class="modal-title text-danger fw-semibold d-flex align-items-center gap-2" id="confirmDeleteModalLabel">
+          <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+          ¿Eliminar <span id="modalObjectName" class="fw-bold text-dark"></span>?
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
       <form id="confirmDeleteForm" method="post">
         {% csrf_token %}
-        <div class="modal-header bg-danger text-white">
-          <h5 class="modal-title" id="confirmDeleteModalLabel">
-            ❗¿Estás seguro de que querés eliminar <span id="modalObjectName" class="fw-bold"></span>?
-          </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        
+        <div class="modal-body px-4 text-center text-muted">
+          Esta acción <strong>no se puede deshacer</strong>. ¿Deseas continuar?
         </div>
-        <div class="modal-body text-center">
-          Esta acción no se puede deshacer.
-        </div>
-        <div class="modal-footer justify-content-center">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            <i class="bi bi-x-lg"></i> Cancelar
+
+        <div class="modal-footer border-0 justify-content-center gap-2 px-4">
+          <button type="button" class="btn pastel-btn-gray px-4" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle me-1"></i> Cancelar
           </button>
-          <button type="submit" class="btn btn-danger">
-            <i class="bi bi-trash"></i> Eliminar
+          <button type="submit" class="btn custom-main-btn px-4">
+            <i class="bi bi-trash me-1"></i> Eliminar
           </button>
         </div>
       </form>
+
     </div>
   </div>
 </div>

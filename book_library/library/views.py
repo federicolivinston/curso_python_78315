@@ -1,5 +1,5 @@
 # Imports generales
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db import IntegrityError
 from django.db.models import Q
 from django.db.models.deletion import ProtectedError
@@ -8,10 +8,13 @@ from django.views.generic.detail import DetailView
 from django.views.generic import ListView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
 from typing import cast
 
 # Import de modelos
-from .models import Book, Category, Author 
+from .models import Book, Category, Author, Parameter 
 
 # Import de forms
 from .forms import AuthorForm, BookFilterForm, BookForm, CategoryForm
@@ -19,10 +22,13 @@ from .forms import CategoryFilterForm
 from .forms import AuthorFilterForm
 
 #--------------------------------------------------
-# vista pagina principal
+# vistas estaticas
 #--------------------------------------------------
 def home(request):
     return render(request, 'library/inicio.html')
+
+def about_us(request):
+    return render(request, 'library/about_us.html')
 
 #--------------------------------------------------
 # vistas de aministracion de libros (crud)
@@ -43,9 +49,12 @@ def book_list(request):
         if title:
             libros = libros.filter(title__icontains=title)
 
+    is_admin = request.user.groups.filter(name='admin').exists()
+
     context = {
         'form': form,
         'book_list': libros.order_by('title'),
+        'is_admin': is_admin,
     }
     return render(request, 'library/book_list.html', context)
 
@@ -54,7 +63,7 @@ class BookDetailView(DetailView):
     template_name = 'library/book_detail.html'
     context_object_name = 'book'
 
-class BookCreateView(CreateView):
+class BookCreateView(LoginRequiredMixin, CreateView):
     model = Book
     form_class = BookForm
     template_name = 'library/common_cu_form.html'
@@ -83,7 +92,7 @@ class BookCreateView(CreateView):
          messages.error(self.request, '❌ Ocurrió un error al guardar el libro. Revisá los campos.')
          return super().form_invalid(form)
 
-class BookUpdateView(UpdateView):
+class BookUpdateView(LoginRequiredMixin, UpdateView):
     model = Book
     form_class = BookForm
     template_name = 'library/common_cu_form.html'
@@ -104,7 +113,7 @@ class BookUpdateView(UpdateView):
         messages.error(self.request, "❌ Ocurrió un error al actualizar el libro.")
         return super().form_invalid(form)
 
-class BookDeleteView(DeleteView):
+class BookDeleteView(LoginRequiredMixin, DeleteView):
     model = Book
     template_name = 'library/common_confirm_delete.html'
     success_url = reverse_lazy('listado libros')
@@ -125,9 +134,35 @@ class BookDeleteView(DeleteView):
             messages.error(request, "❌ No se puede eliminar el libro.")
             return redirect(self.success_url)
 
+@login_required
+def book_reserve(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+
+    if request.method == 'POST':
+        # Cambiar estado a "Prestado"
+        status_prestado = Parameter.objects.get(parameter_type='book_status', name='Prestado')
+        book.status = status_prestado
+        book.user_booking = request.user
+        book.save()
+
+    return redirect('detalle libro', pk=book.pk)
+
+@login_required
+def book_return(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+
+    if request.method == 'POST' and book.user_booking == request.user:
+        status_disponible = Parameter.objects.get(parameter_type='book_status', name='Disponible')
+        book.status = status_disponible
+        book.user_booking = None
+        book.save()
+
+    return redirect('detalle libro', pk=book.pk)
+
 #--------------------------------------------------
 # vistas de administracion de categorias (crud)
 #--------------------------------------------------
+@login_required
 def category_list(request):
     form = CategoryFilterForm(request.GET or None)
     categories = Category.objects.all()
@@ -140,14 +175,16 @@ def category_list(request):
             categories = categories.filter(category_name__icontains=name)
         if active in ['0', '1']:
             categories = categories.filter(active=(active == '1'))
+    is_admin = request.user.groups.filter(name='admin').exists()
 
     context = {
         'form': form,
         'categories': categories.order_by('category_name'),
+        'is_admin': is_admin,
     }
     return render(request, 'library/category_list.html', context)
 
-class CategoryCreateView(CreateView):
+class CategoryCreateView(LoginRequiredMixin, CreateView):
     model = Category
     form_class = CategoryForm
     template_name = 'library/common_cu_form.html'
@@ -172,7 +209,7 @@ class CategoryCreateView(CreateView):
         messages.error(self.request, '❌ Ocurrió un error al guardar la categoría. Revisá los campos.')
         return super().form_invalid(form)
 
-class CategoryUpdateView(UpdateView):
+class CategoryUpdateView(LoginRequiredMixin, UpdateView):
     model = Category
     form_class = CategoryForm
     template_name = 'library/common_cu_form.html'
@@ -193,7 +230,7 @@ class CategoryUpdateView(UpdateView):
         messages.error(self.request, "❌ Ocurrió un error al actualizar la categoria.")
         return super().form_invalid(form)
 
-class CategoryDeleteView(DeleteView):
+class CategoryDeleteView(LoginRequiredMixin, DeleteView):
     model = Category
     template_name = 'library/common_confirm_delete.html'
     success_url = reverse_lazy('listado categorias')
@@ -212,6 +249,7 @@ class CategoryDeleteView(DeleteView):
 #--------------------------------------------------
 # vistas de administracion de autores (crud)
 #--------------------------------------------------
+@login_required
 def author_list(request):
     form = AuthorFilterForm(request.GET or None)
     authors = Author.objects.all()
@@ -220,14 +258,16 @@ def author_list(request):
         name = form.cleaned_data.get('name_contains')
         if name:
             authors = authors.filter(name__icontains=name)
+    is_admin = request.user.groups.filter(name='admin').exists()
 
     context = {
         'form': form,
         'authors': authors.order_by('name'),
+        'is_admin': is_admin,
     }
     return render(request, 'library/author_list.html', context)
 
-class AuthorCreateView(CreateView):
+class AuthorCreateView(LoginRequiredMixin, CreateView):
     model = Author
     form_class = AuthorForm
     template_name = 'library/common_cu_form.html'
@@ -252,7 +292,7 @@ class AuthorCreateView(CreateView):
         messages.error(self.request, '❌ Ocurrió un error al guardar el autor. Revisá los campos.')
         return super().form_invalid(form)
 
-class AuthorUpdateView(UpdateView):
+class AuthorUpdateView(LoginRequiredMixin, UpdateView):
     model = Author
     form_class = AuthorForm
     template_name = 'library/common_cu_form.html'
@@ -273,7 +313,7 @@ class AuthorUpdateView(UpdateView):
         messages.error(self.request, "❌ Ocurrió un error al actualizar el autor.")
         return super().form_invalid(form)
 
-class AuthorDeleteView(DeleteView):
+class AuthorDeleteView(LoginRequiredMixin, DeleteView):
     model = Author
     template_name = 'library/common_confirm_delete.html'
     success_url = reverse_lazy('listado autores')

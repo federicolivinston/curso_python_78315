@@ -51,7 +51,8 @@ class BookForm(forms.ModelForm):
         model = Book
         fields = [
             'library_code', 'title', 'isbn', 'short_description',
-            'category', 'author', 'editor', 'publish_year', 'image'
+            'category', 'author', 'editor', 'publish_year', 'image', 
+            'status', 'user_booking', 'aquisition_date'
         ]
 
         labels = {
@@ -64,6 +65,9 @@ class BookForm(forms.ModelForm):
             'editor': 'Editorial',
             'publish_year': 'Año de publicación',
             'image': 'Imagen (opcional)',
+            'status': 'Estado',
+            'user_booking': 'Reservado por',
+            'aquisition_date': 'Fecha Ingreso',
         }
 
         widgets = {
@@ -80,6 +84,13 @@ class BookForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Descripción breve del libro'
             }),
+            'aquisition_date': forms.DateTimeInput(
+                attrs={
+                    'class': 'form-control',
+                    'type': 'datetime-local'
+                },
+                format='%Y-%m-%dT%H:%M'
+            )
         }
 
 class AuthorForm(forms.ModelForm):

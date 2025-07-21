@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% load breadcrumbs %}
+
+{% block breadcrumb %}
+  {% render_breadcrumbs %}
+{% endblock %}
 {% block content %}
 <!-- Estilos particulares para esta pagina para la imagen -->
 <style>
@@ -28,14 +33,10 @@
     <div class="row g-0">
       <div class="col-md-auto image-container">
         {% if object.image %}
-            {% if object.image|slice:":4" == "http" %}
-                <img src="{{ object.image }}" alt="Portada del libro">
-            {% else %}
-                <img src="{% static 'img/book_images/' %}{{ object.image }}" alt="Portada del libro">
-            {% endif %}
+            <img src="{{ object.image.url }}" alt="Portada del libro">
         {% else %}
           <img src="{% static 'img/book_images/default.jpg' %}" alt="Imagen por defecto">
-        {% endif %}
+        {% endif %}      
       </div>
       <div class="col-md">
         <div class="card-body">
@@ -48,17 +49,27 @@
           <p class="card-text"><strong>Categoría:</strong> {{ object.category }}</p>
           <p class="card-text"><strong>Año de publicación:</strong> {{ object.publish_year }}</p>
           <p class="card-text"><strong>ISBN:</strong> {{ object.isbn }}</p>
-          <p class="card-text"><small class="text-muted">Estado: {{ object.get_status_display }}</small></p>
           <p class="card-text"><small class="text-muted">Fecha de adquisición: {{ object.aquisition_date|date:"d/m/Y" }}</small></p>
+          {% if user.is_authenticated %}
+          <p class="card-text"><small class="text-muted">Estado: {{ object.status.name }}</small></p>
+          {% endif %}
+          {% if user.is_authenticated %}
+            {% if object.status.name == "Disponible" %}
+              <form method="post" action="{% url 'reservar libro' object.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn custom-main-btn mt-3">Reservar</button>
+              </form>
+            {% elif object.status.name == "Prestado" and object.user_booking == user %}
+              <form method="post" action="{% url 'devolver libro' object.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn custom-main-btn mt-3">Devolver</button>
+              </form>
+            {% endif %}
+          {% endif %}
+
         </div>
       </div>
     </div>
-  </div>
-  <!-- Boton volver -->
-  <div class="text-center mt-4">
-    <a href="{% url 'listado libros' %}" class="btn btn-outline-secondary">
-      ← Volver
-    </a>
   </div>
 </div>
 {% endblock %}

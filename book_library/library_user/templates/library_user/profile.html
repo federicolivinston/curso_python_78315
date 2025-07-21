@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5" style="max-width: 700px;">
+    <!-- Mensajes de success y error -->
+    {% if messages %}
+      <div class="mt-3">
+        {% for message in messages %}
+          {% with message.tags as tag %}
+            {% if tag == 'error' %}
+              {% with 'danger' as tag %}
+                <div class="alert alert-{{ tag }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+              {% endwith %}
+            {% else %}
+              <div class="alert alert-{{ tag }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+              </div>
+            {% endif %}
+          {% endwith %}
+        {% endfor %}
+      </div>
+    {% endif %}
+    <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <div class="row g-4 align-items-start">
+
+        <!-- Avatar e imagen -->
+        <div class="col-md-4 text-center">
+          {% if avatar and avatar.imagen %}
+            <img src="{{ avatar.imagen.url }}"
+                 alt="Avatar"
+                 class="rounded-circle shadow border border-info p-1 mb-2"
+                 style="width: 120px; height: 120px; object-fit: cover;">
+          {% else %}
+            <img src="{% static 'img/avatar_default.jpg' %}"
+                 alt="Avatar por defecto"
+                 class="rounded-circle shadow border border-info p-1 mb-2"
+                 style="width: 120px; height: 120px; object-fit: cover;">
+          {% endif %}
+
+          <!-- Botón que abre el modal -->
+          <button type="button" class="btn custom-main-btn btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#avatarModal">
+            <i class="bi bi-person-bounding-box me-1"></i> Cambiar Avatar
+          </button>
+        </div>
+
+        <!-- Información del usuario -->
+        <div class="col">
+          <h4 class="mb-1">{{ user.username }}</h4>
+          <hr/>
+          <ul class="list-unstyled mt-3 mb-4">
+            <li><strong>Nombre:</strong> {{ user.first_name }}</li>
+            <li><strong>Apellido:</strong> {{ user.last_name }}</li>
+            <li><strong>Direccion de email:</strong> {{ user.email }}</li>
+          </ul>
+          <button type="button" class="btn custom-main-btn btn-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+            <i class="bi bi-pencil-square me-1"></i> Editar Perfil
+          </button>
+          <button type="button" class="btn custom-main-btn btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+            <i class="bi bi-key me-1"></i> Cambiar Contraseña
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para editar el avatar -->
+<div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" enctype="multipart/form-data" action="{% url 'actualizar avatar' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="avatarModalLabel">Actualizar Avatar</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+            <table>
+                {{ avatar_form.as_table }}
+            </table>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn custom-main-btn btn-sm me-2">
+            <i class="bi bi-check-lg"></i> Guardar
+          </button> 
+          <button type="button" class="btn pastel-btn-gray" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para editar el perfil-->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Mostrar errores de validación en un solo bloque -->
+      {% if profile_form.errors %}
+      <div class="alert alert-danger">
+          <ul class="mb-0">
+          {% for field in profile_form %}
+              {% for error in field.errors %}
+              <li>{{ field.label }}: {{ error }}</li>
+              {% endfor %}
+          {% endfor %}
+          {% for error in profile_form.non_field_errors %}
+              <li>{{ error }}</li>
+          {% endfor %}
+          </ul>
+      </div>
+      {% endif %}
+      <form method="post" action="{% url 'actualizar perfil' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProfileModalLabel">Editar Perfil</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+            <table>
+                {{ profile_form.as_table }}
+            </table>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn custom-main-btn btn-sm me-2">
+            <i class="bi bi-check-lg"></i> Guardar
+          </button>            
+          <button type="button" class="btn pastel-btn-gray" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para cambiar contraseña -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{% url 'actualizar password' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="editPasswordModalLabel">cambiar Contraseña</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+            <table>
+                {{ password_form.as_table }}
+            </table>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn custom-main-btn btn-sm me-2">
+            <i class="bi bi-check-lg"></i> Guardar
+          </button>            
+          <button type="button" class="btn pastel-btn-gray" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% if abrir_modal %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const modal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
+    modal.show();
+  });
+</script>
+{% endif %}
+{% endblock %}

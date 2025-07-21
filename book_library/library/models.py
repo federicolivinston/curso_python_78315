@@ -1,9 +1,13 @@
 import datetime
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.core.validators import RegexValidator
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
+from django.core.files.storage import FileSystemStorage
+from django.core.files.base import ContentFile
+from django.contrib.auth import get_user_model
 
 #--------------------------------------------------
 # funciones de ayuda
@@ -18,8 +22,42 @@ def validate_publish_year(value):
         raise ValidationError(f'El año de publicación debe estar entre 1900 y {current_year}.')
 
 #--------------------------------------------------
+# Función para generar la ruta de subida dinámica
+#--------------------------------------------------
+
+def book_image_upload_to(instance, filename):
+    ext = filename.split('.')[-1]
+    if instance.pk:
+        return f'book_images/{instance.pk}.{ext}'
+    return f'book_images/temp/{filename}'
+
+#--------------------------------------------------
+# storage personalizado para imágenes
+#--------------------------------------------------
+
+book_image_storage = FileSystemStorage(location=settings.MEDIA_ROOT, base_url='/media/')
+
+#--------------------------------------------------
+# este modelo contiene los datos genericos inamovibles
+#  de la aplicacion, es para evitar tener muchas tablas, 
+# por ej: tipo documento, provincia, etc
+#--------------------------------------------------  
+
+class Parameter(models.Model):
+    name = models.CharField(max_length=100)
+    parameter_type = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+    @staticmethod
+    def parameter_list(parameter_filter):
+        return Parameter.objects.filter(parameter_type=parameter_filter)
+
+#--------------------------------------------------
 # modelos
 #--------------------------------------------------   
+
 class Category(models.Model):
 
     category_name = models.CharField(max_length=50,
@@ -45,12 +83,6 @@ class Author(models.Model):
         return self.name
 
 class Book(models.Model):
-
-    STATUS_CHOICES = [
-        ('A', 'Disponible'),
-        ('B', 'Prestado'),
-        ('U', 'No disponible'),
-    ]
  
     library_code = models.CharField(
         max_length=6,
@@ -84,9 +116,52 @@ class Book(models.Model):
     publish_year = models.IntegerField(
         validators=[validate_publish_year]
     )
-    image = models.CharField(max_length=200, blank=True, null=True)    
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='A')
+    image = models.ImageField(
+        upload_to=book_image_upload_to,
+        storage=book_image_storage,
+        blank=True,
+        null=True
+    )    
+    status = models.ForeignKey(Parameter, on_delete=models.PROTECT,
+                            limit_choices_to={'parameter_type': 'book_status'})
     aquisition_date = models.DateTimeField(default=timezone.now)
+    user_booking = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name='books_reserved',
+    )
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        image_file = self.image
+
+        if self.pk:
+            try:
+                old_instance = Book.objects.get(pk=self.pk)
+                if old_instance.image and self.image and old_instance.image.name != self.image.name:
+                    old_instance.image.delete(save=False)
+            except Book.DoesNotExist:
+                pass
+
+        if not self.pk:
+            super().save(*args, **kwargs)
+
+        if image_file:
+            ext = image_file.name.split('.')[-1]
+            new_name = f'book_images/{self.pk}.{ext}'
+            image_content = image_file.read()
+            self.image.save(new_name, ContentFile(image_content), save=False)
+
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        if self.image:
+            self.image.delete(save=True)
+        return super().delete(*args, **kwargs)
+
+
+
