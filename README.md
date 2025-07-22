@@ -86,8 +86,8 @@ Se incluyen las imagenes de los dos libros de prueba en la carpeta:
 
 # ✅ Camino de Testing Sugerido
 
-> Recomendado utilizar la base precargada. Si no, primero crear registros de los modelos.
-> Video de presentacion: https://drive.google.com/file/d/1H1W8BmFGzOvrKMVlZY8F1w_GYn8rgTGe/view?usp=sharing
+> - Recomendado utilizar la base precargada. Si no, primero crear registros de los modelos.
+> - Video de presentacion: https://drive.google.com/file/d/1H1W8BmFGzOvrKMVlZY8F1w_GYn8rgTGe/view?usp=sharing
 
 ## Acceso Anonimo
 
