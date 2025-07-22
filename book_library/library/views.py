@@ -243,8 +243,13 @@ class CategoryDeleteView(LoginRequiredMixin, DeleteView):
         return context
 
     def post(self, request, *args, **kwargs):
-        messages.success(request, "🗑️ Categoria eliminado con éxito.")
-        return super().post(request, *args, **kwargs)
+        try:
+            response = super().post(request, *args, **kwargs)
+            messages.success(request, "🗑️ Categoria eliminado con éxito.")
+            return response
+        except ProtectedError:
+            messages.error(request, "❌ No se puede eliminar la categori porque tiene libros asociados.")
+            return redirect(self.success_url)    
     
 #--------------------------------------------------
 # vistas de administracion de autores (crud)
