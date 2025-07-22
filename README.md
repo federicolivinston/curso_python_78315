@@ -71,13 +71,13 @@ Se incluyen las imagenes de los dos libros de prueba en la carpeta:
 📂 `media/` — Archivos subidos por usuarios (imágenes de libros, avatares, etc.)
 
 ### 🔑 Datos de acceso
-Usuario comun: 
-Usuario: user
-Contraseña: user123
+**Usuario común:**  
+- Usuario: `user`  
+- Contraseña: `user123`
 
-Usuario administrador
-Usuario: admin
-Contraseña: admin123
+**Usuario administrador:**  
+- Usuario: `admin`  
+- Contraseña: `admin123`
 
 ### 🧰 Para utilizarla:
 1. Renombrar `db.sqlite3.default` a `db.sqlite3`.
@@ -87,6 +87,7 @@ Contraseña: admin123
 # ✅ Camino de Testing Sugerido
 
 > Recomendado utilizar la base precargada. Si no, primero crear registros de los modelos.
+> Video de presentacion: https://drive.google.com/file/d/1H1W8BmFGzOvrKMVlZY8F1w_GYn8rgTGe/view?usp=sharing
 
 ## Acceso Anonimo
 
