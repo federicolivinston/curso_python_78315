@@ -176,6 +176,7 @@ Requisitos previos:
 
 ```bash
 pip install -r requirements.txt
+```
 
 **En caso de que usen base de datos vacía:**
 
@@ -184,7 +185,7 @@ pip install -r requirements.txt
 ```bash
 python manage.py makemigrations
 python manage.py migrate
-
+```
 2. Agregar un grupo llamado "admin" y asignarselo al superusuario para darle ermisos de administracion.
 3. Agregar en la tabla parameter:
     name= 'Disponible', parameter_type='book_status'
