@@ -1,9 +1,9 @@
-# 📘 cursoPython78315
+# 📘 Curso Python - Coderhouse (Comisión 78315)
 
 Repositorio para el curso de Python de **Coderhouse** de *Federico Livingston*.
 
 Entrega Final: **Biblioteca Nacional de la Juventud**  
-Aplicación web desarrollada con Django que permite gestionar libros, autores y categorías con filtros, validaciones y una interfaz moderna basada en Bootstrap.
+Aplicación web desarrollada con Django que permite gestionar libros, autores y categorías. Incluye filtros, validaciones y una interfaz moderna basada en Bootstrap.
 
 ---
 
@@ -80,9 +80,8 @@ Usuario: admin
 Contraseña: admin123
 
 ### 🧰 Para utilizarla:
-1. Renombrar `db.sqlite3.default` a `db.sqlite3`
-2. Colocarla en la raíz del proyecto, reemplazando la existente si aplica
-
+1. Renombrar `db.sqlite3.default` a `db.sqlite3`.
+2. Colocar el archivo en la raíz del proyecto, reemplazando el existente si aplica.
 ---
 
 # ✅ Camino de Testing Sugerido
@@ -160,7 +159,7 @@ Ejecutar las siguientes acciones por modelo:
 - ✅ Crear un nuevo libro
 - ✅ Modificar un libro existente
 - ⚠️ Crear/modificar un libro con código duplicado → debe dar error
-- ⚠️ Ingresar ISBN o código con formato incorrecto → debe dar error
+- ⚠️ Ingresar ISBN o código de biblioteca con formato incorrecto → debe dar error
 - ✅ Eliminar un libro
 
 ---
@@ -177,8 +176,16 @@ Requisitos previos:
 ```bash
 pip install -r requirements.txt
 
-**Incluir migraciones en caso de que usen base de datos vacía:**
+**En caso de que usen base de datos vacía:**
+
+1. Incluir migraciones:
 
 ```bash
 python manage.py makemigrations
 python manage.py migrate
+
+2. Agregar un grupo llamado "admin" y asignarselo al superusuario para darle ermisos de administracion.
+3. Agregar en la tabla parameter:
+    name= 'Disponible', parameter_type='book_status'
+    name= 'Prestado', parameter_type='book_status'
+    name= 'No disponible', parameter_type='book_status'

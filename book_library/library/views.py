@@ -104,14 +104,23 @@ class BookUpdateView(LoginRequiredMixin, UpdateView):
         context['cancel_url'] = reverse_lazy('listado libros')
         context['show_save_and_add'] = False
         return context
-    
+
     def form_valid(self, form):
+        book = self.get_object()
+
+        # Si se marcó "eliminar imagen"
+        if self.request.POST.get('image-clear'):
+            if book.image:
+                book.image.delete(save=False)
+            form.instance.image = None
+
+        # Si no se subió una nueva, conservar la actual
+        elif not self.request.FILES.get('image'):
+            form.instance.image = book.image
+
         messages.success(self.request, "✅ Libro actualizado con éxito.")
         return super().form_valid(form)
 
-    def form_invalid(self, form):
-        messages.error(self.request, "❌ Ocurrió un error al actualizar el libro.")
-        return super().form_invalid(form)
 
 class BookDeleteView(LoginRequiredMixin, DeleteView):
     model = Book

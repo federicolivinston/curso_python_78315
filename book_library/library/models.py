@@ -137,26 +137,17 @@ class Book(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        image_file = self.image
-
         if self.pk:
             try:
                 old_instance = Book.objects.get(pk=self.pk)
-                if old_instance.image and self.image and old_instance.image.name != self.image.name:
-                    old_instance.image.delete(save=False)
             except Book.DoesNotExist:
-                pass
+                old_instance = None
 
-        if not self.pk:
-            super().save(*args, **kwargs)
-
-        if image_file:
-            ext = image_file.name.split('.')[-1]
-            new_name = f'book_images/{self.pk}.{ext}'
-            image_content = image_file.read()
-            self.image.save(new_name, ContentFile(image_content), save=False)
+            if old_instance and old_instance.image and old_instance.image != self.image:
+                old_instance.image.delete(save=False)
 
         super().save(*args, **kwargs)
+
 
     def delete(self, *args, **kwargs):
         if self.image:
